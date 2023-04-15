@@ -1,12 +1,50 @@
-version: '3'
+version: "3"
 services:
- client:
-  container_name: client
-  build:
-   context: ./client
-   dockerfile: Dockerfile
-  image: client-frontend:latest
-  ports:
-   -3000:3000
- backend:
- 
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: client-frontend:latest
+    ports: -3000:3000
+    stdin_open: true
+    networks:
+      front-end-network:
+        ipv4_address: 172.128.0.3
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: client-backend:latest
+    ports: -5000:5000
+    environment:
+      PORT: 5000
+      MONGO_URI: "mongodb://njoki:njoki@172.127.0.3:27017"
+    networks:
+      front-end-network:
+        ipv4_address: 172.128.0.2
+      back-end-network:
+        ipv4_address: 172.127.0.2
+  mongo:
+    container_name: mongo_db
+    image: mongo:latest
+    ports: -27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: njoki
+      MONGO_INITDB_ROOT_PASSWORD: njoki
+    networks:
+      back-end-network:
+        ipv4_address: 172.127.0.3
+
+networks:
+  front-end-network:
+    ipam:
+      driver: default
+      config:
+        -subnet: 172.128.0.0/16
+  back-end-network:
+    ipam:
+      driver: default
+      config:
+        -subnet: 172.127.0.0/16
