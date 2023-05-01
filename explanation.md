@@ -19,13 +19,13 @@ The client docker file implemeted using using multi-stage builds because it is h
 
 `WORKDIR` directive sets the working directory for the container to /client.
 
-Then, the `COPY` directive copies the package.json and package-lock.json files to the /client directory which are required to install the necessary dependencies for the application.
+ `COPY` directive copies the package.json and package-lock.json files to the /client directory which are required to install the necessary dependencies for the application.
 
 The `RUN` directive is used to execute the following commands; `npm install --only=production` to installs only the production dependencies and also clears the npm cache and removes any temporary files using `npm cache clean --force` and `rm -rf /tmp/*` respectively.
 
 The `COPY` directive is the used to copy the rest of the application code to the container's working directory.
 
-The `RUN` directive builds the application by running `npm run build` and it also removes development dependencies using `npm prune --production`.
+The `RUN` directive builds the application by running `npm run build` it also  removes development dependencies using `npm prune --production`.
 
 ##### Production Stage
 
@@ -55,9 +55,9 @@ The `ENV` directive sets the NODE_ENV environment variable inside the Docker ima
 
 The `EXPOSE` directive the port 5000 to be exposed by the container when it is running.
 
-The `RUN` directive is used to execute the following commands; `npm prune --production` to remove development dependencies and also clears the npm cache and removes any temporary files using `npm cache clean --force` and `rm -rf /tmp/*` respectively similar to that in build stage.
+`RUN` execute the following commands; `npm prune --production` to remove development dependencies and also clears the npm cache and removes any temporary files using `npm cache clean --force` and `rm -rf /tmp/*` respectively similar to that in build stage.
 
-`CMD` directive specifies the default command to run when a container is started and in this case.
+`CMD` directive specifies the default command to run when a container is started .
 
 ## 3. Docker-compose Networking
 
