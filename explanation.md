@@ -84,4 +84,4 @@ A backend_voulme as been defined. The volume is then mounted to the container's 
 ## 5. Git workflow used to achieve the task
 
 Dockerfile are version-controlled using Git alongside other project files, and changes are  to be committed and pushed to a Git repository.
-[Docker-Hub](https://hub.docker.com/search?q=warui1225)
+[Docker-Hub](https://github.com/Esthernjoki/yolo.git)
