@@ -1,18 +1,20 @@
-## 1. Choice of Base Image
-
-`node:16-alpine3.16` image is used as the base image to build the container. It is based on the Alpine Linux distribution. This was choosen as it is lightweight and has a smaller footprint compared to other distributions. It includes Node.js version 16, which is higher than the version that the application requires.
+## 1. Base Image
+## Backend And Client Base Image
+ node:19-alpine - Alpine  is much smaller than most distribution base images and thus leads to much slimmer images in general.
+ ## Database
+  mongo - Itis the available image for Mongo DB
 
 ## 2. Dockerfile Directives
 
 ### _Client_
 
-The client docker file implemeted using using multi-stage builds. This is neccessary as it help achieve:
+The client docker file implemeted using using multi-stage builds because it is helps achieve the following:
 
-- Smaller and efficient images by separating the build dependencies from the runtime dependencies.
 - Faster builds as by separating the build stage from the production stage, only rebuild the parts that have changed.
 - Improved security: it ensures that the production image does not include any development tools or libraries that may introduce security vulnerabilities.
 - Simpler Dockerfile: separing the stages help create a Dockerfile which is simple and easier to read and maintain.
-
+- Smaller and efficient images by separating the build dependencies from the runtime dependencies.
+- 
 ##### Build Stage
 
 `WORKDIR` directive sets the working directory for the container to /client.
@@ -59,15 +61,21 @@ The `RUN` directive is used to execute the following commands; `npm prune --prod
 
 ## 3. Docker-compose Networking
 
-There are two networks are defined: `backend-net` and `frontend-net`.
-`ipam` which in full is IP Address Management option is used to configure the IP addressing for the containers in each network.
-The `driver: default` is used to set the default IPAM driver provided by Docker.
-The `frontend-net` network, uses the subnet `172.51.0.0/16` and `backend-net` network uses the subnet `172.100.0.0/16`.
-The client container is given an IP of `172.51.0.101` in this `frontend-net` network.
-The backend container is given an IP of `172.100.0.100` on The `backend-net`, and `172.51.0.100` on the `frontend-net` network.
-The database container is given the IP address `172.100.0.101` on the backend-net network.
-This makes it possible for containers to communicate with one another over the network using their unique IP addresses and helps prevent IP address conflicts.
-Ports `3000` of the client container, `5000` of the backend container and `27017` the database container, are mapped to the host machine's ports `3000`, `5000` and `27017`.
+Had both the frontend and Backend Tier network to isolate and also for security puporses as below.
+This is to enable the frontend to communicate with backend and backend to communicate to Database using different networks.
+```
+networks:
+  frontend-tier-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.128.0.0/16
+  backend-tier-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.127.0.0/16
+```
 
 ## 4. Docker-compose volume
 
@@ -75,4 +83,5 @@ A backend_voulme as been defined. The volume is then mounted to the container's 
 
 ## 5. Git workflow used to achieve the task
 
-Dockerfile are version-controlled using Git alongside other project files, and changes are be committed and pushed to a Git repository.
+Dockerfile are version-controlled using Git alongside other project files, and changes are  to be committed and pushed to a Git repository.
+[Docker-Hub](https://hub.docker.com/search?q=warui1225)
