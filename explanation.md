@@ -1,6 +1,3 @@
-Database
-mongo - The only available image for Mongo DB
-
 ## 1. Choice of Base Image
 
 `node:16-alpine3.16` image is used as the base image to build the container. It is based on the Alpine Linux distribution. This was choosen as it is lightweight and has a smaller footprint compared to other distributions. It includes Node.js version 16, which is higher than the version that the application requires.
